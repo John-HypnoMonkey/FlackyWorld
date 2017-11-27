@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from random import randint
-class player:
+import game_object
+import gameitem
+class player(game_object.game_object):
 
     name ="Hero"
     x = 0
@@ -17,6 +19,7 @@ class player:
     player_action_cost = 0
     is_dead = False
     message =""
+    symbol = "@"
     next_action_func = None
     next_action_args = None
     def __init__(self, x, y):
@@ -26,14 +29,22 @@ class player:
         enemy.taking_damage(randint(-3,3)+self.strength)
     def taking_damage(self, damage, aditional_action = None):
         self.hp = self.hp - damage
-        if self.hp > 1:
+        if self.hp < 1:
             self.is_dead = True
+    def heal(self, add_hp):
+        self.hp += add_hp
+        if self.hp > self.maxhp:
+            self.hp = self.maxhp
     def move(self, new_x, new_y, maplist, items, npcs):
         if self.canmove(new_x, new_y, maplist, npcs):
             for val in items:
                 if val.x == new_x and val.y == new_y:
                     val.on_the_ground = False
-                    self.coins +=1
+                    val.x, val.y = -1, -1
+                    if val.__class__ == gameitem.coin:
+                        self.coins +=1
+                    elif val.__class__ == gameitem.heal_potion:
+                        self.heal(10)
             self.x=new_x
             self.y=new_y
         else:
@@ -48,6 +59,7 @@ class player:
                 self.attack(val)
                 return False
                 pass
+
         if maplist[y][x] == "#":
             return False
         else:

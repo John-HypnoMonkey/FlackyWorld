@@ -1,4 +1,5 @@
-class gameitem:
+import game_object
+class gameitem(game_object.game_object):
     name ="Unnamed"
     x,y=0,0
     symbol="U"
@@ -14,3 +15,6 @@ class coin(gameitem):
     name ="Coin"
     symbol="$"
 
+class heal_potion(gameitem):
+    name = "Heal potion"
+    symbol = "h"

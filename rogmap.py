@@ -1,21 +1,12 @@
 # -*- coding: utf-8 -*-
+import dungen
 class rogmap:
     maplist = []
-   # @staticmethod
+    width, height = 64, 32
     def init(self):
-       # global maplist
-        self.maplist.append(["-","-","-","-","-","-","#","-","-","-"])
-        self.maplist.append(["-","-","-","-","-","-","#","-","-","-"])
-        self.maplist.append(["-","-","-","-","-","-","-","-","-","-"])
-        self.maplist.append(["-","-","#","#","#","#","#","-","-","-"])
-        self.maplist.append(["-","-","-","-","-","-","#","-","-","-"])
-        self.maplist.append(["-","-","-","-","-","-","#","-","-","-"])
-        self.maplist.append(["-","-","-","-","-","-","-","-","-","-"])
-        self.maplist.append(["-","-","-","-","-","-","-","-","-","-"])
-        self.maplist.append(["-","-","-","-","-","-","-","-","-","-"])
-        self.maplist.append(["-","-","-","-","-","-","-","-","-","-"])
+        gen = dungen.Generator(self.width,self.height,7)
+        gen.gen_level()
+        self.maplist = gen.get_tiles_level()
 
-   # @staticmethod
     def getmaplist(self):
-     #   global maplist
-     return(self.maplist)
+        return(self.maplist)

@@ -5,7 +5,7 @@ class search_way:
     depth_maplist = []
     path =[]
     def add_depth(self, x, y, i):
-        max_x, max_y = 10, 10
+        max_x, max_y = 64, 32
         if x > -1 and y > -1 and x < max_x and y < max_y  \
         and self.depth_maplist[y][x] == "-":
             self.depth_maplist[y][x] = str(i)
@@ -17,39 +17,39 @@ class search_way:
         while i > 0:
             self.path.append([current_x, current_y])
             i=i-1
-            if current_x > -1 and  current_y > -1 and current_x + 1 < 10 \
-            and current_y < 10 and self.depth_maplist[current_y][current_x + 1\
+            if current_x > -1 and  current_y > -1 and current_x + 1 < 63 \
+            and current_y < 31 and self.depth_maplist[current_y][current_x + 1\
                                                       ] == str(i):
                 current_x =current_x + 1
-            elif current_x - 1> -1 and  current_y > -1 and current_x < 10 \
-            and current_y < 10 and self.depth_maplist[current_y][current_x - 1\
+            elif current_x - 1> -1 and  current_y > -1 and current_x < 63 \
+            and current_y < 31 and self.depth_maplist[current_y][current_x - 1\
                                                       ] == str(i):
                 current_x =current_x - 1
-            elif current_x > -1 and  current_y > -1 and current_x < 10 \
-            and current_y+1 < 10 and self.depth_maplist[current_y+1][current_x\
+            elif current_x > -1 and  current_y > -1 and current_x < 63 \
+            and current_y+1 < 31 and self.depth_maplist[current_y+1][current_x\
                                                         ] == str(i):
                 current_y =current_y+1
-            elif current_x > -1 and  current_y -1 > -1 and current_x < 10 \
-            and current_y < 10 and self.depth_maplist[current_y-1][current_x\
+            elif current_x > -1 and  current_y -1 > -1 and current_x < 63 \
+            and current_y < 31 and self.depth_maplist[current_y-1][current_x\
                                                       ] == str(i):
                 current_y=current_y-1
-            elif current_x > -1 and  current_y > -1 and current_x + 1 < 10 \
-            and current_y+1 < 10 and self.depth_maplist[current_y+1][current_x + 1\
+            elif current_x > -1 and  current_y > -1 and current_x + 1 < 63 \
+            and current_y+1 < 31 and self.depth_maplist[current_y+1][current_x + 1\
                                                       ] == str(i):
                 current_x+=1
                 current_y+=1
-            elif current_x-1 > -1 and  current_y-1 > -1 and current_x < 10 \
-            and current_y < 10 and self.depth_maplist[current_y-1][current_x - 1\
+            elif current_x-1 > -1 and  current_y-1 > -1 and current_x < 63 \
+            and current_y < 31 and self.depth_maplist[current_y-1][current_x - 1\
                                                       ] == str(i):
                 current_x-=1
                 current_y-=1
-            elif current_x -1 > -1 and  current_y > -1 and current_x < 10 \
-            and current_y+1 < 10 and self.depth_maplist[current_y+1][current_x-1\
+            elif current_x -1 > -1 and  current_y > -1 and current_x < 63 \
+            and current_y+1 < 31 and self.depth_maplist[current_y+1][current_x-1\
                                                       ] == str(i):
                 current_x-=1
                 current_y+=1
-            elif current_x  > -1 and  current_y-1 > -1 and current_x+1 < 10 \
-            and current_y < 10 and self.depth_maplist[current_y-1][current_x+1\
+            elif current_x  > -1 and  current_y-1 > -1 and current_x+1 < 63 \
+            and current_y < 31 and self.depth_maplist[current_y-1][current_x+1\
                                                       ] == str(i):
                 current_x+=1
                 current_y-=1
@@ -70,11 +70,11 @@ class search_way:
         self.add_depth(x1 + 1, y1 - 1, 1)
         self.add_depth(x1 - 1, y1 + 1, 1)
 
-        for iii in range(0,9):
+        for iii in range(0,63):
             ix=0
-            for ix in range(0,9):
+            for ix in range(0,63):
                 iy=0
-                for iy in range(0,9):
+                for iy in range(0,31):
                     if self.depth_maplist[iy][ix] == str(i):
                         ii = i + 1
                         self.add_depth(ix+1, iy, ii)

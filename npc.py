@@ -1,11 +1,13 @@
 import time
 from random import randint
-class npc:
+import game_object
+class npc(game_object.game_object):
     name ="John Doe"
     x = 0
     y = 0
     hp = 10
     maxhp = 10
+    saw_player=True
     path = [] #list of path from the npc to enemy
     strength = 5
     agility = 5
