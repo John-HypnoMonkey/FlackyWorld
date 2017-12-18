@@ -14,13 +14,27 @@
 #Code was slightly modified by John-HypoMonkey
 from __future__ import print_function
 import random
-
+import room
 CHARACTER_TILES = {'stone': '.',
                    'floor': '-',
                    'wall': '#'}
 
 
 class Generator():
+    def gen_room_type(self):
+        i = random.randint(1,100)
+        room_type=""
+        if  i < 25:
+            room_type = "kitchen"
+        elif i > 25 and i < 35:
+            room_type ="warhouse"
+        elif i > 35 and i < 50:
+            room_type = "kitchen"
+        elif i >50 and i < 55:
+            room_type = "treasure_room"
+        else:
+            room_type = "standart_room"
+        return room_type
     def __init__(self, width=64, height=64, max_rooms=15, min_room_xy=5,
                  max_room_xy=10, rooms_overlap=False, random_connections=1,
                  random_spurs=3, tiles=CHARACTER_TILES):
@@ -45,14 +59,14 @@ class Generator():
         h = random.randint(self.min_room_xy, self.max_room_xy)
         x = random.randint(1, (self.width - w - 1))
         y = random.randint(1, (self.height - h - 1))
-
-        return [x, y, w, h]
+        return room.room(x,y,w,h, self.gen_room_type())
+       # return [x, y, w, h]
 
     def room_overlapping(self, room, room_list):
-        x = room[0]
-        y = room[1]
-        w = room[2]
-        h = room[3]
+        x = room.x #0
+        y = room.y #1
+        w = room.w #2
+        h = room.h #3
 
         for current_room in room_list:
 
@@ -61,10 +75,10 @@ class Generator():
             # is greater than the other's maximum in
             # that dimension.
 
-            if (x < (current_room[0] + current_room[2]) and
-                current_room[0] < (x + w) and
-                y < (current_room[1] + current_room[3]) and
-                current_room[1] < (y + h)):
+            if (x < (current_room.x + current_room.w) and
+                current_room.x < (x + w) and
+                y < (current_room.y + current_room.h) and
+                current_room.y < (y + h)):
 
                 return True
 
@@ -102,19 +116,20 @@ class Generator():
     def join_rooms(self, room_1, room_2, join_type='either'):
         # sort by the value of x
         sorted_room = [room_1, room_2]
-        sorted_room.sort(key=lambda x_y: x_y[0])
+        sorted_room.sort(key=lambda x_y: x_y.x)
+       #sorted_room.sort(key=lambda x_y: x_y[0])
 
-        x1 = sorted_room[0][0]
-        y1 = sorted_room[0][1]
-        w1 = sorted_room[0][2]
-        h1 = sorted_room[0][3]
+        x1 = sorted_room[0].x
+        y1 = sorted_room[0].y
+        w1 = sorted_room[0].w
+        h1 = sorted_room[0].h
         x1_2 = x1 + w1 - 1
         y1_2 = y1 + h1 - 1
 
-        x2 = sorted_room[1][0]
-        y2 = sorted_room[1][1]
-        w2 = sorted_room[1][2]
-        h2 = sorted_room[1][3]
+        x2 = sorted_room[1].x
+        y2 = sorted_room[1].y
+        w2 = sorted_room[1].w
+        h2 = sorted_room[1].h
         x2_2 = x2 + w2 - 1
         y2_2 = y2 + h2 - 1
 
@@ -228,17 +243,17 @@ class Generator():
 
         # do the spurs
         for a in range(self.random_spurs):
-            room_1 = [random.randint(2, self.width - 2), random.randint(
-                     2, self.height - 2), 1, 1]
+            room_1 = room.room(random.randint(2, self.width - 2), random.randint(
+                     2, self.height - 2), 1, 1)
             room_2 = self.room_list[random.randint(0, len(self.room_list) - 1)]
             self.join_rooms(room_1, room_2)
 
         # fill the map
         # paint rooms
-        for room_num, room in enumerate(self.room_list):
-            for b in range(room[2]):
-                for c in range(room[3]):
-                    self.level[room[1] + c][room[0] + b] = 'floor'
+        for room_num, current_room in enumerate(self.room_list):
+            for b in range(current_room.w):
+                for c in range(current_room.h):
+                    self.level[current_room.y + c][current_room.x + b] = 'floor'
 
         # paint corridors
         for corridor in self.corridor_list:

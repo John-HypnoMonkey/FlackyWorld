@@ -17,7 +17,7 @@ class npc(game_object.game_object):
     symbol = "g" #symbol that will represent the npc on a map
     chance_to_evade = 0
     target=None #target to chase and attack
-    what_to_do_with_target=("chase","attack","runaway")
+    what_to_do_with_target=("goto","runaway","be_on_distance")
     is_dead = False
     drawable= True
     msg=""
@@ -34,13 +34,6 @@ class npc(game_object.game_object):
         else:
             if len(self.path)>0:
                 self.attack(self.target)
-        #if self.path[0] == -1:
-            #do nothing
-            #pass
-        #elif len(self.path) > 1:
-            #self.move()
-        #else:
-            #self.attack(self.target)
 
     def move(self):
         if len(self.path)>0:
