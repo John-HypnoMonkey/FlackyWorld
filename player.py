@@ -7,8 +7,8 @@ class player(game_object.game_object):
     name ="Hero"
     x = 0
     y = 0
-    hp = 20
-    maxhp = 20
+    hp = 200
+    maxhp = 200
     level = 1
     exp = 0
     strength = 8

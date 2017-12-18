@@ -1,8 +1,10 @@
 import time
 from random import randint
 import game_object
+import helper
 class npc(game_object.game_object):
     name ="John Doe"
+
     x = 0
     y = 0
     hp = 10
@@ -14,8 +16,10 @@ class npc(game_object.game_object):
     damage = 0
     symbol = "g" #symbol that will represent the npc on a map
     chance_to_evade = 0
-    enemy=None #target to chace and attack
+    target=None #target to chase and attack
+    what_to_do_with_target=("chase","attack","runaway")
     is_dead = False
+    drawable= True
     msg=""
     def __init__(self, x, y, name, is_dead=False):
         self.x = x
@@ -23,17 +27,25 @@ class npc(game_object.game_object):
         self.name = name
         self.is_dead = is_dead
     def set_enemy(self, enemy):
-        self.enemy = enemy
+        self.target = enemy
     def do_action(self):
-        self.msg=str(len(self.path))
-        if len(self.path) > 1:
+        if len(self.path)>1:
             self.move()
         else:
-            self.attack(self.enemy)
-        self.msg= str(self.hp);
+            if len(self.path)>0:
+                self.attack(self.target)
+        #if self.path[0] == -1:
+            #do nothing
+            #pass
+        #elif len(self.path) > 1:
+            #self.move()
+        #else:
+            #self.attack(self.target)
+
     def move(self):
-        self.x, self.y = self.path[0][0], self.path[0][1]
-        del self.path[0]
+        if len(self.path)>0:
+            self.x, self.y = self.path[0][0], self.path[0][1]
+            del self.path[0]
     def attack(self, enemy):
         msg = "attack"
         enemy.taking_damage(randint(-3,3)+self.strength)
@@ -46,6 +58,7 @@ class npc(game_object.game_object):
         msg = "{0} taking {1} damage. ".format(self.name, str(damage))
         if self.hp < 1:
             self.is_dead = True
+            self.drawable = False
             self.symbol = "c"
             msg  = msg+"{0} is dead. ".format(self.name)
         return msg
