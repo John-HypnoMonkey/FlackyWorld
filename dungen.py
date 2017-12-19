@@ -15,10 +15,40 @@
 from __future__ import print_function
 import random
 import room
+import unittest
 CHARACTER_TILES = {'stone': '.',
                    'floor': '-',
                    'wall': '#'}
 
+
+class TestGenerator(unittest.TestCase):
+    def setUp(self):
+        self.gen = Generator(20,20,5,5,5)
+    def test_gen_room_type(self):
+        self.assertTrue(isinstance(self.gen.gen_room_type(), str))
+    def test_gen_room(self):
+        self.assertTrue(isinstance(self.gen.gen_room(),room.room))
+    def test_room_overlapping(self):
+        for item in range(0,5):
+            self.gen.room_list.append(self.gen.gen_room())
+        for item in self.gen.room_list:
+            self.assertTrue(isinstance(self.gen.room_overlapping(item, self.gen.room_list), bool))
+    def test_corridor_between_points(self):
+        self.assertTrue(isinstance(self.gen.corridor_between_points(2,2,10,2), list))
+        self.assertTrue(isinstance(self.gen.corridor_between_points(2,2,2,10), list))
+        self.assertTrue(isinstance(self.gen.corridor_between_points(10,2,2,2), list))
+        self.assertTrue(isinstance(self.gen.corridor_between_points(2,10,2,2), list))
+    def test_join_rooms(self):
+        for item in range(0,2):
+            self.gen.room_list.append(self.gen.gen_room())
+        self.assertIsNone(self.gen.join_rooms(self.gen.room_list[0],self.gen.room_list[1]))
+    def test_gen_level(self):
+        gen = Generator(20,20,5,5,5)
+        self.assertIsNone(gen.gen_level())
+    def test_gen_tiles_level(self):
+        gen = Generator(20,20,5,5,5)
+        gen.gen_level()
+        self.assertIsInstance(gen.get_tiles_level(), list)
 
 class Generator():
     def gen_room_type(self):
@@ -319,8 +349,9 @@ class Generator():
 
 
 if __name__ == '__main__':
-    gen = Generator(20,20,5,5,5)
+    unittest.main()
+"""    gen = Generator(20,20,5,5,5)
     gen.gen_level()
     maplist = []
     maplist = gen.gen_tiles_level()
-
+"""
