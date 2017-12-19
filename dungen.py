@@ -25,19 +25,19 @@ class TestGenerator(unittest.TestCase):
     def setUp(self):
         self.gen = Generator(20,20,5,5,5)
     def test_gen_room_type(self):
-        self.assertTrue(isinstance(self.gen.gen_room_type(), str))
+        self.assertIsInstance(self.gen.gen_room_type(), str)
     def test_gen_room(self):
-        self.assertTrue(isinstance(self.gen.gen_room(),room.room))
+        self.assertIsInstance(self.gen.gen_room(),room.room)
     def test_room_overlapping(self):
         for item in range(0,5):
             self.gen.room_list.append(self.gen.gen_room())
         for item in self.gen.room_list:
-            self.assertTrue(isinstance(self.gen.room_overlapping(item, self.gen.room_list), bool))
+            self.assertIsInstance(self.gen.room_overlapping(item, self.gen.room_list), bool)
     def test_corridor_between_points(self):
-        self.assertTrue(isinstance(self.gen.corridor_between_points(2,2,10,2), list))
-        self.assertTrue(isinstance(self.gen.corridor_between_points(2,2,2,10), list))
-        self.assertTrue(isinstance(self.gen.corridor_between_points(10,2,2,2), list))
-        self.assertTrue(isinstance(self.gen.corridor_between_points(2,10,2,2), list))
+        self.assertIsInstance(self.gen.corridor_between_points(2,2,10,2), list)
+        self.assertIsInstance(self.gen.corridor_between_points(2,2,2,10), list)
+        self.assertIsInstance(self.gen.corridor_between_points(10,2,2,2), list)
+        self.assertIsInstance(self.gen.corridor_between_points(2,10,2,2), list)
     def test_join_rooms(self):
         for item in range(0,2):
             self.gen.room_list.append(self.gen.gen_room())
