@@ -33,5 +33,7 @@ def set_random_position(maplist, game_objects):
             if is_position_free == True:
                 return rand_x, rand_y
 
+
+
 if __name__ == "__main__":
     unittest.main()

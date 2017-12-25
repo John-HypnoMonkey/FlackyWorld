@@ -18,4 +18,8 @@ class coin(gameitem):
 
 class heal_potion(gameitem):
     name = "Heal potion"
-    symbol = "h"
+    symbol = ","
+
+class cake(gameitem):
+    name = "Tasty cake"
+    symbol = "_"

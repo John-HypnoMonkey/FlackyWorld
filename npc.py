@@ -2,8 +2,9 @@ import time
 from random import randint
 import game_object
 import helper
+import game_log
 class npc(game_object.game_object):
-    name ="John Doe"
+    name ="monster"
 
     x = 0
     y = 0
@@ -21,10 +22,11 @@ class npc(game_object.game_object):
     is_dead = False
     drawable= True
     msg=""
-    def __init__(self, x, y, name, is_dead=False):
+    def __init__(self, x, y, name="", is_dead=False):
         self.x = x
         self.y = y
-        self.name = name
+        if name != "":
+            self.name = '{0}, {1}'.format(name, self.name)
         self.is_dead = is_dead
     def set_enemy(self, enemy):
         self.target = enemy
@@ -40,18 +42,22 @@ class npc(game_object.game_object):
             self.x, self.y = self.path[0][0], self.path[0][1]
             del self.path[0]
     def attack(self, enemy):
-        msg = "attack"
         enemy.taking_damage(randint(-3,3)+self.strength)
-        msg = "{0} attacks {1}. ".format(self.name, enemy.name)
+        game_log.game_log.add_message("{0} attacks {1}. ".format(self.name, enemy.name))
         time.sleep(0.1)
-        return msg
 
     def taking_damage(self, damage, aditional_action = None):
         self.hp = self.hp - damage
-        msg = "{0} taking {1} damage. ".format(self.name, str(damage))
+        game_log.game_log.add_message("{0} taking {1} damage. ".format(self.name, str(damage)))
         if self.hp < 1:
             self.is_dead = True
             self.drawable = False
             self.symbol = "c"
-            msg  = msg+"{0} is dead. ".format(self.name)
-        return msg
+            game_log.game_log.add_message("{0} is dead. ".format(self.name))
+
+
+class goblin(npc):
+    name = "goblin"
+
+class goblin_capitan(goblin):
+    name = "goblin capitan"

@@ -168,9 +168,9 @@ def raycast(stdscr, level, game_objects, px, py):
                 if element != '-':
                     stdscr.addstr(i,j, element)
                 else:
-                    stdscr.addstr(i,j, ' ')
+                    stdscr.addstr(i,j, '.')
             else:
-                stdscr.addstr(i,j, '`') #Unseen
+                stdscr.addstr(i,j, ' ') #Unseen
             j +=1
         i+=1
         j=0

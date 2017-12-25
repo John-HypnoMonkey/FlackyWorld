@@ -2,6 +2,7 @@
 from random import randint
 import game_object
 import gameitem
+import game_log
 class player(game_object.game_object):
 
     name ="Hero"
@@ -26,6 +27,7 @@ class player(game_object.game_object):
         self.x = x
         self.y = y
     def attack(self, enemy):
+        game_log.game_log.add_message("You punch {0}".format(enemy.name))
         enemy.taking_damage(randint(-3,3)+self.strength)
     def taking_damage(self, damage, aditional_action = None):
         self.hp = self.hp - damage
@@ -35,6 +37,7 @@ class player(game_object.game_object):
         self.hp += add_hp
         if self.hp > self.maxhp:
             self.hp = self.maxhp
+        game_log.game_log.add_message("You fill yourself much better")
     def move(self, new_x, new_y, maplist, items, npcs):
         if self.canmove(new_x, new_y, maplist, npcs):
             for val in items:
