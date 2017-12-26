@@ -5,27 +5,24 @@ import gameitem
 import game_log
 class player(game_object.game_object):
 
-    name ="Hero"
-    x = 0
-    y = 0
-    hp = 200
-    maxhp = 200
-    level = 1
-    exp = 0
-    strength = 8
-    agility = 5
-    damage = 0
-    coins = 0
-    chance_to_evade = 0
-    player_action_cost = 0
-    is_dead = False
-    message =""
-    symbol = "@"
-    next_action_func = None
-    next_action_args = None
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        game_object.game_object.__init__(self,x,y)
+        self.name ="Hero"
+        self.hp = 200
+        self.maxhp = 200
+        self.level = 1
+        self.exp = 0
+        self.strength = 8
+        self.agility = 5
+        self.damage = 0
+        self.coins = 0
+        self.chance_to_evade = 0
+        self.player_action_cost = 0
+        self.is_dead = False
+        self.message =""
+        self.symbol = "@"
+        self.next_action_func = None
+        self.next_action_args = None
     def attack(self, enemy):
         game_log.game_log.add_message("You punch {0}".format(enemy.name))
         enemy.taking_damage(randint(-3,3)+self.strength)

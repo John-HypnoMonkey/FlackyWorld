@@ -176,4 +176,4 @@ def raycast(stdscr, level, game_objects, px, py):
         j=0
     for element in game_objects:
         if element.drawable == True and fov[element.y][element.x] == 1:
-            stdscr.addstr(element.y, element.x, element.symbol)
+            stdscr.addstr(element.y, element.x, element.symbol, curses.color_pair(element.color_pair))

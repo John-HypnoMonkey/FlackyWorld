@@ -1,25 +1,32 @@
 import game_object
+import helper
 class gameitem(game_object.game_object):
-    name ="Unnamed"
-    x,y=0,0
-    drawable =True
-    symbol="U"
-    on_the_ground = True
     def __init__(self, x, y):
-        self.x = x
-        self.y = y
+        game_object.game_object.__init__(self, x, y)
+        self.name ="Unnamed"
+        self.drawable =True
+        self.symbol="?"
+        self.on_the_ground = True
     def pick_up(self):
         self.x,self.y=0,0
         self.on_the_ground = False
         self.drawable = False
 class coin(gameitem):
-    name ="Coin"
-    symbol="$"
+    def __init__(self, x, y):
+        gameitem.__init__(self, x, y)
+        self.name ="Coin"
+        self.color_pair = helper.COLOR_YELLOW
+        self.symbol="$"
 
 class heal_potion(gameitem):
-    name = "Heal potion"
-    symbol = ","
+    def __init__(self, x, y):
+        gameitem.__init__(self, x, y)
+        self.name = "Heal potion"
+        self.color_pair = helper.COLOR_BLUE
+        self.symbol = ","
 
 class cake(gameitem):
-    name = "Tasty cake"
-    symbol = "_"
+    def __init__(self, x, y):
+        gameitem.__init__(self, x, y)
+        self.name = "Tasty cake"
+        self.symbol = "_"

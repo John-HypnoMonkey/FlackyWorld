@@ -4,30 +4,39 @@ import game_object
 import helper
 import game_log
 class npc(game_object.game_object):
-    name ="monster"
 
-    x = 0
-    y = 0
-    hp = 10
-    maxhp = 10
-    saw_player=True
-    path = [] #list of path from the npc to enemy
-    strength = 5
-    agility = 5
-    damage = 0
-    symbol = "g" #symbol that will represent the npc on a map
-    chance_to_evade = 0
-    target=None #target to chase and attack
-    what_to_do_with_target=("goto","runaway","be_on_distance")
-    is_dead = False
-    drawable= True
-    msg=""
     def __init__(self, x, y, name="", is_dead=False):
+        game_object.game_object.__init__(self,x,y)
+        self.__name = name
+        self.hp = 10
+        self.maxhp = 10
+        self.saw_player=True
+        self.path = [] #list of path from the npc to enemy
+        self.strength = 5
+        self.agility = 5
+        self.damage = 0
+        self.symbol = "g" #symbol that will represent the npc on a map
+        self.chance_to_evade = 0
+        self.target=None #target to chase and attack
+        self.what_to_do_with_target=("goto","runaway","be_on_distance")
+        self.is_dead = False
+        self.drawable= True
+
+        self.race = ""
+        self.job = ""
         self.x = x
         self.y = y
-        if name != "":
-            self.name = '{0}, {1}'.format(name, self.name)
         self.is_dead = is_dead
+
+    @property
+    def name(self):
+        if self.__name!="":
+            if self.job!="":
+                return "{0}, {1} {2}".format(self.__name,self.job, self.race)
+            else:
+                return "{0}, {1}".format(self.__name,self.race)
+        else:
+            return "{0}".format(self.race)
     def set_enemy(self, enemy):
         self.target = enemy
     def do_action(self):
@@ -48,7 +57,7 @@ class npc(game_object.game_object):
 
     def taking_damage(self, damage, aditional_action = None):
         self.hp = self.hp - damage
-        game_log.game_log.add_message("{0} taking {1} damage. ".format(self.name, str(damage)))
+        game_log.game_log.add_message("{0} is taking {1} damage. ".format(self.name, str(damage)))
         if self.hp < 1:
             self.is_dead = True
             self.drawable = False
@@ -57,7 +66,16 @@ class npc(game_object.game_object):
 
 
 class goblin(npc):
-    name = "goblin"
+    def __init__(self,x,y, name="", is_dead=False):
+        npc.__init__(self,x,y,name,is_dead)
+        self.color_pair=helper.COLOR_RED
+
+        self.race="goblin"
 
 class goblin_capitan(goblin):
-    name = "goblin capitan"
+    def __init__(self,x,y, name="", is_dead=False):
+        goblin.__init__(self,x,y,name,is_dead)
+        self.color_pair=helper.COLOR_CYAN
+        self.job="capitan"
+        self.hp=randint(12,30)
+        self.strength = randint(8,10)

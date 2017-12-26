@@ -20,8 +20,16 @@ def curses_main(args):
     curses.noecho()
     curses.start_color()
     curses.use_default_colors()
-    for i in range(0,curses.COLORS):
-        curses.init_pair(i + 1, i, -1)
+
+    curses.init_pair(0, curses.COLOR_BLACK, curses.COLOR_BLACK)
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(4, curses.COLOR_BLUE, curses.COLOR_BLACK)
+    curses.init_pair(5, curses.COLOR_MAGENTA, curses.COLOR_BLACK)
+    curses.init_pair(6, curses.COLOR_CYAN, curses.COLOR_BLACK)
+    curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
+
     curses.curs_set(0)
     #inits some important values
     rogmap1 = rogmap.rogmap()
@@ -31,7 +39,7 @@ def curses_main(args):
     game_objects.append(player1)
     npcs = []
     gameitems = []
-    game_log.game_log.add_message("Welcome to my roguelike.wsad - movement, q - exit")
+    game_log.game_log.add_message("wsad - movement, q - exit")
     search_way1 = search_way.search_way()
     #size of the map
     width = 63
@@ -47,22 +55,23 @@ def curses_main(args):
         gameitems.append(gameitem.coin(x,y))
         game_objects.append(gameitems[-1])
     #add heal potions
-    random_count = random.randint(30,30)
+    random_count = random.randint(4,6)
     for i in range(0, random_count):
         x,y = helper.set_random_position(maplist, game_objects)
         gameitems.append(gameitem.heal_potion(x,y))
         game_objects.append(gameitems[-1])
     #add some enemies
-    random_count = random.randint(1,2)
+    random_count = random.randint(5,9)
     for i in range(0,random_count):
         x,y = helper.set_random_position(maplist, game_objects)
-        npcs.append(npc.goblin(x,y,"Soldier"))
+        npcs.append(npc.goblin(x,y,helper.get_random_name()))
         game_objects.append(npcs[-1])
+    random_count = random.randint(1,3)
     for i in range(0,random_count):
         x,y = helper.set_random_position(maplist, game_objects)
-        npcs.append(npc.goblin_capitan(x,y,"Soldier"))
+        npcs.append(npc.goblin_capitan(x,y, helper.get_random_name()))
         game_objects.append(npcs[-1])
-    #all enemies will player
+    #all enemies will chase player
     for val in npcs:
         val.set_enemy(player1)
     #main loop
@@ -74,9 +83,9 @@ def curses_main(args):
             game_log.game_log.add_message("You are dead. Press 'q' to exit")
         else:
             #draws main character
-            stdscr.addstr(player1.y,player1.x,"@", curses.color_pair(4))
+            stdscr.addstr(player1.y,player1.x,"@",curses.color_pair(helper.COLOR_YELLOW))
         #adding HUD
-        stdscr.addstr(34, 2, "Name: {0} level: {1} HP: {2}/{3} Coins: {4}".format(
+        stdscr.addstr(32, 2, "Name: {0} level: {1} HP: {2}/{3} Coins: {4}".format(
         player1.name, player1.level, player1.hp, player1.maxhp, player1.coins))
        # stdscr.addstr(38, 2, global_msg)
 
