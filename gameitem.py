@@ -7,6 +7,8 @@ class gameitem(game_object.game_object):
         self.drawable =True
         self.symbol="?"
         self.on_the_ground = True
+        self.pickable = True
+        self.count = 1
     def pick_up(self):
         self.x,self.y=0,0
         self.on_the_ground = False
@@ -30,3 +32,4 @@ class cake(gameitem):
         gameitem.__init__(self, x, y)
         self.name = "Tasty cake"
         self.symbol = "_"
+

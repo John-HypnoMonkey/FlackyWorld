@@ -22,6 +22,8 @@ class game_log():
             i = i +1
             if i >10:
                 break
-
+    @classmethod
+    def get_log(cls):
+        return game_log.__history 
 if __name__ == "__main__":
     unittest.main()

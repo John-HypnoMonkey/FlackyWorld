@@ -3,6 +3,7 @@ from random import randint
 import game_object
 import gameitem
 import game_log
+import inventory
 class player(game_object.game_object):
 
     def __init__(self, x, y):
@@ -30,11 +31,11 @@ class player(game_object.game_object):
         self.hp = self.hp - damage
         if self.hp < 1:
             self.is_dead = True
-    def heal(self, add_hp):
-        self.hp += add_hp
-        if self.hp > self.maxhp:
-            self.hp = self.maxhp
-        game_log.game_log.add_message("You fill yourself much better")
+#    def heal(self, add_hp):
+#        self.hp += add_hp
+#        if self.hp > self.maxhp:
+#            self.hp = self.maxhp
+#        game_log.game_log.add_message("You fill yourself much better")
     def move(self, new_x, new_y, maplist, items, npcs):
         if self.canmove(new_x, new_y, maplist, npcs):
             for val in items:
@@ -43,8 +44,9 @@ class player(game_object.game_object):
                     val.x, val.y = -1, -1
                     if val.__class__ == gameitem.coin:
                         self.coins +=1
-                    elif val.__class__ == gameitem.heal_potion:
-                        self.heal(10)
+                    else:
+                        inventory.inventory.add_item(val)
+                        game_log.game_log.add_message("You pick up a {0}".format(val.name))
             self.x=new_x
             self.y=new_y
         else:

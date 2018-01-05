@@ -50,7 +50,11 @@ def get_random_name():
     'Tudong', 'Tumuk', 'Momak', 'Amaugoth', 'Bramong', 'Taggak Gang', \
     'Cruduk',"G'dok", 'Mumak', 'Thodong', 'Saguk', 'Thragak Mok', 'Gramung', \
     'Thrudor', 'Mumung', 'Soggurth', 'Maduk Brath', 'Emuugguth', 'Brogong Mok',\
-    'Emaumoth', 'Togok', 'Tuggong', 'Kragur', 'Bromurth', 'Thoggak','Gradath']
+    'Emaumoth', 'Togok', 'Tuggong', 'Kragur', 'Bromurth', 'Thoggak','Gradath',\
+    "Guggar K'not", "Thrumak", "Sadarth","Tadarth","Kraguk","Braguth","Moduk",
+    "Grogok", "Gruggorth", "Aggoumuk", "Mamamng", "K'ggung", "Sogok", "Tuggor",\
+    "Brugoth Thrar","Kramarth", "Thruguk","Throdak", "Tugung","Bramak","Sugak",\
+    "Thungung", "Maggong"];
     return goblins[random.randint(0,len(goblins)-1)]
 
 
