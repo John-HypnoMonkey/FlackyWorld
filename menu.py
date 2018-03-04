@@ -1,7 +1,7 @@
 import curses
 
 
-class pop_up_window():
+class PopUpWindow():
     # all draw_func must have (stdscr, x, y) signature
     def __init__(self, stdscr, x=10, y=10, width=100, height=30,
                  name="pop-up window", draw_func=None, update_func=None):
@@ -11,8 +11,8 @@ class pop_up_window():
         self.width = width
         self.height = height
         self.name = name
-        self.draw_func = draw_func
-        self.update_func = update_func
+        self.drawFunc = draw_func
+        self.updateFunc = update_func
         self.is_visible = False
         # horizontal line
         self.top_h_line = u'\u250c{0}\u2510'.format((self.width-2)*u'\u2500')
@@ -27,10 +27,10 @@ class pop_up_window():
             for i in range(1, self.height):
                 self.stdscr.addstr(self.y + i, self.x, self.content_line)
             self.stdscr.addstr(self.y + self.height, self.x, self.bottom_h_line)
-            self.draw_func(self.stdscr, self.x, self.y)
+            self.drawFunc(self.stdscr, self.x, self.y)
 
     def update(self):
-        self.update_func()
+        self.updateFunc()
 
 
 if __name__ == '__main__':
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     curses.start_color()
     curses.use_default_colors()
     curses.curs_set(0)
-    window1 = pop_up_window(stdscr, 10, 10, 100, 30, 'Inventory')
+    window1 = PopUpWindow(stdscr, 10, 10, 100, 30, 'Inventory')
     window1.is_visible = True
 
     while True:

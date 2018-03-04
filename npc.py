@@ -5,10 +5,10 @@ import helper
 import game_log
 
 
-class npc(game_object.game_object):
+class npc(game_object.GameObject):
 
     def __init__(self, x, y, name="", is_dead=False):
-        game_object.game_object.__init__(self, x, y)
+        game_object.GameObject.__init__(self, x, y)
         self.__name = name
         self.hp = 10
         self.maxhp = 10
@@ -42,10 +42,10 @@ class npc(game_object.game_object):
         else:
             return "{0}".format(self.race)
 
-    def set_enemy(self, enemy):
+    def setEnemy(self, enemy):
         self.target = enemy
 
-    def do_action(self):
+    def doAction(self):
         if len(self.path) > 1:
             self.move()
         else:
@@ -58,21 +58,21 @@ class npc(game_object.game_object):
             del self.path[0]
 
     def attack(self, enemy):
-        enemy.taking_damage(randint(-3, 3) + self.strength)
-        game_log.game_log.add_message("{0} attacks {1}. ".format(self.name, enemy.name))
+        enemy.takingDamage(randint(-3, 3) + self.strength)
+        game_log.GameLog.addMessage("{0} attacks {1}. ".format(self.name, enemy.name))
         time.sleep(0.1)
 
-    def taking_damage(self, damage, aditional_action=None):
+    def takingDamage(self, damage, aditional_action=None):
         self.hp = self.hp - damage
-        game_log.game_log.add_message("{0} is taking {1} damage. ".format(self.name, str(damage)))
+        game_log.GameLog.addMessage("{0} is taking {1} damage. ".format(self.name, str(damage)))
         if self.hp < 1:
             self.is_dead = True
             self.drawable = False
             self.symbol = "c"
-            game_log.game_log.add_message("{0} is dead. ".format(self.name))
+            game_log.GameLog.addMessage("{0} is dead. ".format(self.name))
 
 
-class goblin(npc):
+class Goblin(npc):
     def __init__(self, x, y, name="", is_dead=False):
         npc.__init__(self, x, y, name, is_dead)
         self.color_pair = helper.COLOR_RED
@@ -80,9 +80,9 @@ class goblin(npc):
         self.race = "goblin"
 
 
-class goblin_capitan(goblin):
+class GoblinCapitan(Goblin):
     def __init__(self, x, y, name="", is_dead=False):
-        goblin.__init__(self, x, y, name, is_dead)
+        Goblin.__init__(self, x, y, name, is_dead)
         self.color_pair = helper.COLOR_CYAN
         self.job = "capitan"
         self.hp = randint(12, 30)

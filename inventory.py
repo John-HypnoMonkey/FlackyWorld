@@ -1,17 +1,17 @@
 import gameitem
 
 
-class inventory():
+class Inventory():
     items = []
 
     @classmethod
-    def add_item(cls, item):
+    def addItem(cls, item):
         add_new_item = True
-        for val in inventory.items:
-            if item.name == val.name and not isinstance(item, gameitem.weapon):
+        for val in Inventory.items:
+            if item.name == val.name and not isinstance(item, gameitem.Weapon):
                 val.count += 1
                 del item
                 add_new_item = False
                 break
         if add_new_item is True:
-            inventory.items.append(item)
+            Inventory.items.append(item)

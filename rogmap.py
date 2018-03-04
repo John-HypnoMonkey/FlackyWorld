@@ -2,7 +2,7 @@
 import dungen
 
 
-class rogmap:
+class Rogmap:
     maplist = []
     room_list = []
     width, height = 64, 32
@@ -13,5 +13,5 @@ class rogmap:
         self.maplist = gen.get_tiles_level()
         self.room_list = gen.room_list
 
-    def getmaplist(self):
+    def getMapList(self):
         return(self.maplist)

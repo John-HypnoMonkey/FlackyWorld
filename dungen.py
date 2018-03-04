@@ -89,14 +89,13 @@ class Generator():
         h = random.randint(self.min_room_xy, self.max_room_xy)
         x = random.randint(1, (self.width - w - 1))
         y = random.randint(1, (self.height - h - 1))
-        return room.room(x,y,w,h, self.gen_room_type())
-       # return [x, y, w, h]
+        return room.Room(x, y, w, h, self.gen_room_type())
 
     def room_overlapping(self, room, room_list):
-        x = room.x #0
-        y = room.y #1
-        w = room.w #2
-        h = room.h #3
+        x = room.x
+        y = room.y
+        w = room.w
+        h = room.h
 
         for current_room in room_list:
 
@@ -273,7 +272,7 @@ class Generator():
 
         # do the spurs
         for a in range(self.random_spurs):
-            room_1 = room.room(random.randint(2, self.width - 2), random.randint(
+            room_1 = room.Room(random.randint(2, self.width - 2), random.randint(
                      2, self.height - 2), 1, 1)
             room_2 = self.room_list[random.randint(0, len(self.room_list) - 1)]
             self.join_rooms(room_1, room_2)

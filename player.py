@@ -6,10 +6,10 @@ import game_log
 import inventory
 
 
-class player(game_object.game_object):
+class Player(game_object.GameObject):
 
     def __init__(self, x, y):
-        game_object.game_object.__init__(self, x, y)
+        game_object.GameObject.__init__(self, x, y)
         self.equipment = {'HEAD': '', 'NECK': '', 'L.ARM': '', 'R.ARM': '',
                           'L.HAND': '', 'R.HAND': '', 'TORSO': '', 'LEGS': ''}
         self.name = "Hero"
@@ -30,10 +30,10 @@ class player(game_object.game_object):
         self.next_action_args = None
 
     def attack(self, enemy):
-        game_log.game_log.add_message("You punch {0}".format(enemy.name))
-        enemy.taking_damage(randint(-3, 3) + self.strength)
+        game_log.GameLog.addMessage("You punch {0}".format(enemy.name))
+        enemy.takingDamage(randint(-3, 3) + self.strength)
 
-    def taking_damage(self, damage, aditional_action=None):
+    def takingDamage(self, damage, aditional_action=None):
         self.hp = self.hp - damage
         if self.hp < 1:
             self.is_dead = True
@@ -44,22 +44,22 @@ class player(game_object.game_object):
 #        game_log.game_log.add_message("You fill yourself much better")
 
     def move(self, new_x, new_y, maplist, items, npcs):
-        if self.canmove(new_x, new_y, maplist, npcs):
+        if self.canMove(new_x, new_y, maplist, npcs):
             for val in items:
                 if val.x == new_x and val.y == new_y:
                     val.on_the_ground = False
                     val.x, val.y = -1, -1
-                    if val.__class__ == gameitem.coin:
+                    if val.__class__ == gameitem.Coin:
                         self.coins += 1
                     else:
-                        inventory.inventory.add_item(val)
-                        game_log.game_log.add_message("You pick up a {0}".format(val.name))
+                        inventory.Inventory.addItem(val)
+                        game_log.GameLog.addMessage("You pick up a {0}".format(val.name))
             self.x = new_x
             self.y = new_y
         else:
             pass
 
-    def canmove(self, x, y, maplist, npcs):
+    def canMove(self, x, y, maplist, npcs):
 
         for val in npcs:
             if val.x == x and val.y == y and val.is_dead is False:
@@ -72,11 +72,11 @@ class player(game_object.game_object):
         else:
             return True
 
-    def set_next_action(self, func, args):
+    def setNextAction(self, func, args):
         self.next_action_func = func
         self.next_action_args = args
 
-    def do_action(self):
+    def doAction(self):
         if self.next_action_func is not None:
             self.next_action_func(*self.next_action_args)
             self.next_action_args = None

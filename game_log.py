@@ -1,37 +1,37 @@
-import curses
 import unittest
 
 
 class TestGameLog(unittest.TestCase):
 
-    def test_add_message(self):
-        self.assertIsNone(game_log.add_message("test"))
+    def testAddMessage(self):
+        self.assertIsNone(GameLog.addMessage("test"))
 
 
-class game_log():
+class GameLog():
     __history = []
     y = 35
     x = 2
     emptyline = 50 * " "
+    num_of_lines = 6
 
     @classmethod
-    def add_message(cls, message):
-        game_log.__history.append(message)
+    def addMessage(cls, message):
+        GameLog.__history.append(message)
 
     @classmethod
-    def show_log(cls, stdscr):
+    def showLog(cls, stdscr):
         i = 0
 
-        for line in game_log.__history[::-1]:
-            stdscr.addstr(game_log.y+i, game_log.x, game_log.emptyline)
-            stdscr.addstr(game_log.y+i, game_log.x, line)
+        for line in GameLog.__history[::-1]:
+            stdscr.addstr(GameLog.y+i, GameLog.x, GameLog.emptyline)
+            stdscr.addstr(GameLog.y+i, GameLog.x, line)
             i = i + 1
-            if i > 10:
+            if i > GameLog.num_of_lines:
                 break
 
     @classmethod
-    def get_log(cls):
-        return game_log.__history
+    def getLog(cls):
+        return GameLog.__history
 
 
 if __name__ == "__main__":
