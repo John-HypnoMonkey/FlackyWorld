@@ -13,8 +13,30 @@ import menu
 import inventory
 
 
+def drawMultiLineText(stdscr, text, x, y):
+    i = 0
+    for item in text.split('\n'):
+        stdscr.addstr(y+i, x, item)
+        i += 1
+
+
+def drawLogo(stdscr, y=15, x=20):
+    logo = (
+            "███████╗██╗      █████╗  ██████╗██╗  ██╗██╗   ██╗    ██╗    ██╗ ██████╗ ██████╗ ██╗     ██████╗ \n"
+            "██╔════╝██║     ██╔══██╗██╔════╝██║ ██╔╝╚██╗ ██╔╝    ██║    ██║██╔═══██╗██╔══██╗██║     ██╔══██╗\n"
+            "█████╗  ██║     ███████║██║     █████╔╝  ╚████╔╝     ██║ █╗ ██║██║   ██║██████╔╝██║     ██║  ██║\n"
+            "██╔══╝  ██║     ██╔══██║██║     ██╔═██╗   ╚██╔╝      ██║███╗██║██║   ██║██╔══██╗██║     ██║  ██║\n"
+            "██║     ███████╗██║  ██║╚██████╗██║  ██╗   ██║       ╚███╔███╔╝╚██████╔╝██║  ██║███████╗██████╔╝\n"
+            "╚═╝     ╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝   ╚═╝        ╚══╝╚══╝  ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═════╝ \n"
+            "\n"
+            "                                      [a] Start new game\n"
+            "                                      [q] Exit\n"
+           )
+    drawMultiLineText(stdscr, logo, x, y)
+
+
 class GameMode:
-    game, menu = range(2)
+    game, menu, start_screen = range(3)
 
 
 def drawInventory(stdscr, x, y):
@@ -65,11 +87,8 @@ def drawHelp(stdscr, x, y):
                 "Press 'i' to open inventory, and 'l' to open log\n"
                 "Press 'q' to exit the game\n"
                 )
+    drawMultiLineText(stdscr, helpinfo, x2, y2)
 
-    i = 0
-    for item in helpinfo.split('\n'):
-        stdscr.addstr(y2+i, x2, item)
-        i += 1
 
 
 def drawExitMessage(stdscr, x, y):
@@ -149,7 +168,7 @@ def cursesMain(args):
     menus['exit'] = menu.PopUpWindow(stdscr, 25, 15, 40, 4, "exit the game", drawExitMessage)
     active_menu = None
     # set game mode
-    game_mode = GameMode.game
+    game_mode = GameMode.start_screen
     rogmap1 = rogmap.Rogmap()
     rogmap1.init()
     game_objects = []
@@ -197,94 +216,106 @@ def cursesMain(args):
         val.setEnemy(player1)
     # main loop
     while True:
-        # drawing a map
-        raycast.raycast(stdscr, maplist, game_objects, player1.x, player1.y)
-
-        if player1.is_dead is True:
-            game_log.GameLog.addMessage("You are dead. Press 'q' to exit")
+        if game_mode == GameMode.start_screen:
+            drawLogo(stdscr)
         else:
-            # draws main character
-            stdscr.addstr(player1.y, player1.x, "@",
-                          curses.color_pair(helper.COLOR_YELLOW))
-        # adding HUD
-        stdscr.addstr(32, 2, "Name: {0} level: {1} HP: {2}/{3} Coins: {4}".
-                      format(player1.name, player1.level, player1.hp,
-                             player1.maxhp, player1.coins))
-        # stdscr.addstr(38, 2, global_msg)
+            # drawing a map
+            raycast.raycast(stdscr, maplist, game_objects, player1.x, player1.y)
 
-        # show message log
-        game_log.GameLog.showLog(stdscr)
+            if player1.is_dead is True:
+                game_log.GameLog.addMessage("You are dead. Press 'q' to exit")
+            else:
+                # draws main character
+                stdscr.addstr(player1.y, player1.x, "@",
+                              curses.color_pair(helper.COLOR_YELLOW))
+            # adding HUD
+            stdscr.addstr(32, 2, "Name: {0} level: {1} HP: {2}/{3} Coins: {4}".
+                          format(player1.name, player1.level, player1.hp,
+                                 player1.maxhp, player1.coins))
+            # stdscr.addstr(38, 2, global_msg)
 
-        for key in menus:
-            menus[key].draw()
+            # show message log
+            game_log.GameLog.showLog(stdscr)
+
+            for key in menus:
+                menus[key].draw()
         # listen to keyinput
         c = stdscr.getch()
-        if player1.is_dead is False:
-
-            if c == ord("6"):
-                if player1.x < width-1:
-                    player1.setNextAction(player1.move,
-                                          (player1.x+1, player1.y, maplist,
-                                           gameitems, npcs))
-
-            if c == ord("4"):
-                if player1.x > 0:
-                    player1.setNextAction(player1.move,
-                                          (player1.x-1, player1.y, maplist,
-                                           gameitems, npcs))
-            if c == ord("8"):
-                if player1.y > 0:
-                    player1.setNextAction(player1.move,
-                                          (player1.x, player1.y-1, maplist,
-                                           gameitems, npcs))
-
-            if c == ord("2"):
-                if player1.y < height-1:
-                    player1.setNextAction(player1.move,
-                                          (player1.x, player1.y+1, maplist,
-                                           gameitems, npcs))
-            # menus
-            if c == ord("i") and game_mode == GameMode.game:
-                setActiveMenu(menus['inventory'])
-
-            if c == ord("l") and game_mode == GameMode.game:
-                setActiveMenu(menus['log'])
-            if c == ord("?") and game_mode == GameMode.game:
-                setActiveMenu(menus['help'])
-            if c == ord("w") and game_mode == GameMode.game:
-                setActiveMenu(menus['wield'])
-                continue
-            if c == ord("e") and game_mode == GameMode.game:
-                setActiveMenu(menus['equipment'])
-            if c == ord("q"):
-                closeActiveMenu()
-                setActiveMenu(menus['exit'])
+        if game_mode == GameMode.start_screen:
+            # start new game
+            if c == ord("a"):
+                game_mode = GameMode.game
                 stdscr.clear()
-            if active_menu == menus['wield']:
-                char = chr(c)
-                game_log.GameLog.addMessage(char)
-            if active_menu == menus['exit']:
-                if c == ord("y"):
-                    break
-                elif c == ord("n") or c == 27:
+            if c == ord("q"):
+                # exit the game
+                break
+        else:
+            if player1.is_dead is False:
+
+                if c == ord("6"):
+                    if player1.x < width-1:
+                        player1.setNextAction(player1.move,
+                                              (player1.x+1, player1.y, maplist,
+                                               gameitems, npcs))
+
+                if c == ord("4"):
+                    if player1.x > 0:
+                        player1.setNextAction(player1.move,
+                                              (player1.x-1, player1.y, maplist,
+                                               gameitems, npcs))
+                if c == ord("8"):
+                    if player1.y > 0:
+                        player1.setNextAction(player1.move,
+                                              (player1.x, player1.y-1, maplist,
+                                               gameitems, npcs))
+
+                if c == ord("2"):
+                    if player1.y < height-1:
+                        player1.setNextAction(player1.move,
+                                              (player1.x, player1.y+1, maplist,
+                                               gameitems, npcs))
+                # menus
+                if c == ord("i") and game_mode == GameMode.game:
+                    setActiveMenu(menus['inventory'])
+
+                if c == ord("l") and game_mode == GameMode.game:
+                    setActiveMenu(menus['log'])
+                if c == ord("?") and game_mode == GameMode.game:
+                    setActiveMenu(menus['help'])
+                if c == ord("w") and game_mode == GameMode.game:
+                    setActiveMenu(menus['wield'])
+                    continue
+                if c == ord("e") and game_mode == GameMode.game:
+                    setActiveMenu(menus['equipment'])
+                if c == ord("q"):
                     closeActiveMenu()
+                    setActiveMenu(menus['exit'])
                     stdscr.clear()
-            # esc
-            if c == 27:
-                if game_mode == GameMode.menu:
-                    closeActiveMenu()
-                    stdscr.clear()
-            if game_mode == GameMode.game:
-                # time to do some action
-                if player1.next_action_func is not None:
-                    player1.doAction()
-                    for val in npcs:
-                        if val.is_dead is False and val.saw_player \
-                           and helper.distance(player1, val) < 7:
-                            search_way1.wave(val.x, val.y, player1.x,
-                                             player1.y, npcs, copy.deepcopy(maplist))
-                            val.path = search_way1.path
-                            val.doAction()
+                if active_menu == menus['wield']:
+                    char = chr(c)
+                    game_log.GameLog.addMessage(char)
+                if active_menu == menus['exit']:
+                    if c == ord("y"):
+                        break
+                    elif c == ord("n") or c == 27:
+                        closeActiveMenu()
+                        stdscr.clear()
+                # esc
+                if c == 27:
+                    if game_mode == GameMode.menu:
+                        closeActiveMenu()
+                        stdscr.clear()
+                if game_mode == GameMode.game:
+                    # time to do some action
+                    if player1.next_action_func is not None:
+                        player1.doAction()
+                        for val in npcs:
+                            if val.is_dead is False and val.saw_player \
+                               and helper.distance(player1, val) < 7:
+                                search_way1.wave(val.x, val.y, player1.x,
+                                                 player1.y, npcs, copy.deepcopy(maplist))
+                                val.path = search_way1.path
+                                val.doAction()
         stdscr.refresh()
 
 
