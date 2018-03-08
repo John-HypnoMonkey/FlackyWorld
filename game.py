@@ -64,6 +64,33 @@ def drawWield(stdscr, x, y):
             i += 1
 
 
+def drawEatMenu(stdscr, x, y):
+    x2 = x + 5
+    y2 = y + 3
+    i = 0
+    for item in inventory.Inventory.items:
+        result = "{0}) {1}".format(helper.ALPHABET[i], item.name)
+        if item.count > 1:
+            result = "{0} ({1})".format(result, item.count)
+        stdscr.addstr(y2+i, x2, result)
+        i += 1
+
+
+def updateEatMenu(input_key):
+    i = 0
+    for item in inventory.Inventory.items:
+        if input_key == helper.ALPHABET[i]:
+            item.eat()
+            if item.consumable is True:
+                if item.count > 1:
+                    item.count -= 1
+                else:
+                    del inventory.Inventory.items[i]
+            break
+
+        i += 1
+
+
 def drawLog(stdscr, x, y):
     x2 = x + 5
     y2 = y + 3
@@ -79,16 +106,19 @@ def drawLog(stdscr, x, y):
 def drawHelp(stdscr, x, y):
     x2 = x+5
     y2 = y+3
-    helpinfo = ("Welcome to my roguelike.\n"
-                "Use num4, num8, num6 and num2 to move.\n"
+    helpinfo = ("Welcome to Flacky World.\n"
+                "Use [num4], [num8], [num6] and [num2] to move.\n"
                 "'@' is your character\n"
                 "'g' are your enemies\n"
                 "',', '$' are items what you can pickup\n"
-                "Press 'i' to open inventory, and 'l' to open log\n"
+                "Press:\n"
+                "[i] to open inventory\n"
+                "[E] to eat something\n"
+                "[e} to open equipment\n"
+                "[l] to open log\n"
                 "Press 'q' to exit the game\n"
                 )
     drawMultiLineText(stdscr, helpinfo, x2, y2)
-
 
 
 def drawExitMessage(stdscr, x, y):
@@ -147,6 +177,7 @@ def cursesMain(args):
     curses.start_color()
     curses.use_default_colors()
 
+    # init colors
     curses.init_pair(0, curses.COLOR_BLACK, curses.COLOR_BLACK)
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
     curses.init_pair(2, curses.COLOR_GREEN, curses.COLOR_BLACK)
@@ -156,6 +187,7 @@ def cursesMain(args):
     curses.init_pair(6, curses.COLOR_CYAN, curses.COLOR_BLACK)
     curses.init_pair(7, curses.COLOR_WHITE, curses.COLOR_BLACK)
     curses.curs_set(0)
+
     # inits some important values
 
     # inits menu windows
@@ -165,6 +197,7 @@ def cursesMain(args):
     menus['help'] = menu.PopUpWindow(stdscr, name="help", draw_func=drawHelp)
     menus['wield'] = menu.PopUpWindow(stdscr, name="wield", draw_func=drawWield)
     menus['equipment'] = menu.PopUpWindow(stdscr, name="equipment", draw_func=drawEquipment)
+    menus['eat'] = menu.PopUpWindow(stdscr, name="What do you want to [e]at?", draw_func=drawEatMenu, update_func=updateEatMenu)
     menus['exit'] = menu.PopUpWindow(stdscr, 25, 15, 40, 4, "exit the game", drawExitMessage)
     active_menu = None
     # set game mode
@@ -275,6 +308,11 @@ def cursesMain(args):
                                               (player1.x, player1.y+1, maplist,
                                                gameitems, npcs))
                 # menus
+                if active_menu is not None and active_menu.updateFunc is not None:
+                    active_menu.update(chr(c))
+                    closeActiveMenu()
+                    stdscr.clear()
+
                 if c == ord("i") and game_mode == GameMode.game:
                     setActiveMenu(menus['inventory'])
 
@@ -287,13 +325,13 @@ def cursesMain(args):
                     continue
                 if c == ord("e") and game_mode == GameMode.game:
                     setActiveMenu(menus['equipment'])
+                if c == ord("E") and game_mode == GameMode.game:
+                    setActiveMenu(menus['eat'])
                 if c == ord("q"):
                     closeActiveMenu()
                     setActiveMenu(menus['exit'])
                     stdscr.clear()
-                if active_menu == menus['wield']:
-                    char = chr(c)
-                    game_log.GameLog.addMessage(char)
+
                 if active_menu == menus['exit']:
                     if c == ord("y"):
                         break

@@ -3,7 +3,7 @@ import curses
 
 class PopUpWindow():
     # all draw_func must have (stdscr, x, y) signature
-    def __init__(self, stdscr, x=10, y=10, width=100, height=30,
+    def __init__(self, stdscr, x=10, y=7, width=100, height=27,
                  name="pop-up window", draw_func=None, update_func=None):
         self.stdscr = stdscr
         self.x = x
@@ -29,8 +29,8 @@ class PopUpWindow():
             self.stdscr.addstr(self.y + self.height, self.x, self.bottom_h_line)
             self.drawFunc(self.stdscr, self.x, self.y)
 
-    def update(self):
-        self.updateFunc()
+    def update(self, input_key):
+        self.updateFunc(input_key)
 
 
 if __name__ == '__main__':
