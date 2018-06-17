@@ -76,6 +76,10 @@ def drawEatMenu(stdscr, x, y):
         i += 1
 
 
+def updateWieldMenu(input_key):
+    pass
+
+
 def updateEatMenu(input_key):
     i = 0
     for item in inventory.Inventory.items:
